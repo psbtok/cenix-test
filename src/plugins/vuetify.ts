@@ -1,10 +1,9 @@
-// Styles
-import '@mdi/font/css/materialdesignicons.css'
-import 'vuetify/styles'
-
-// Vuetify
 import { createVuetify } from 'vuetify'
+import 'vuetify/styles' 
+import { md3 } from 'vuetify/blueprints'
 
-export default createVuetify(
-  // https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
-)
+const vuetify = createVuetify({
+  blueprint: md3,
+})
+
+export default vuetify
