@@ -1,6 +1,6 @@
 <template>
-  <v-list>
-    <v-list-item-group v-if="posts.length" color="primary">
+  <v-list class="list">
+    <v-list v-if="posts.length" color="primary">
       <PostItem
         v-for="post in posts"
         :key="post.id"
@@ -8,7 +8,7 @@
         @save="savePost(post.id, $event)"
         @delete="deletePost(post.id)"
       />
-    </v-list-item-group>
+    </v-list>
     <v-list-item v-else>
       <v-list-item-title>No posts available</v-list-item-title>
     </v-list-item>
@@ -16,9 +16,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, onMounted, computed } from 'vue';
 import { usePostStore } from '@/stores/postsStore';
-import PostItem from '@/components/PostItem.vue'; // Adjust the path as needed
+import PostItem from '@/components/PostItem.vue';
 
 export default defineComponent({
   components: {
@@ -26,6 +26,10 @@ export default defineComponent({
   },
   setup() {
     const postStore = usePostStore();
+
+    const loadPosts = () => {
+      postStore.loadPosts();
+    };
 
     const savePost = (id: string, updatedName: string) => {
       postStore.editPost(id, updatedName);
@@ -35,11 +39,21 @@ export default defineComponent({
       postStore.deletePost(id);
     };
 
+    onMounted(loadPosts);
+
+    const posts = computed(() => postStore.posts);
+
     return {
-      posts: postStore.posts,
+      posts,
       savePost,
       deletePost,
     };
   },
 });
 </script>
+
+<style scoped>
+  .list {
+    height: 100%;
+  }
+</style>

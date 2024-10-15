@@ -4,12 +4,23 @@ import { Post } from '@/models/post';
 export const usePostStore = defineStore('post', {
   state: () => ({
     posts: [] as Post[],
+    filteredPosts: []  as Post[]
   }),
   actions: {
     loadPosts() {
       const storedPosts = localStorage.getItem('posts');
+      console.log(storedPosts);
       if (storedPosts) {
         this.posts = JSON.parse(storedPosts);
+      }
+    },
+    searchPosts(query: string) {
+      if (!query) {
+        this.filteredPosts = this.posts;
+      } else {
+        this.filteredPosts = this.posts.filter(post => 
+          post.name.toLowerCase().includes(query.toLowerCase())
+        );
       }
     },
     savePosts() {
@@ -27,6 +38,10 @@ export const usePostStore = defineStore('post', {
       }
     },
     deletePost(id: string) {
+      for (const post of this.posts) {
+        console.log(post.id == id);
+      }
+
       this.posts = this.posts.filter(post => post.id !== id);
       this.savePosts();
     },
