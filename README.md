@@ -1,5 +1,6 @@
-# cenix-test
-
+# Тестовое задание в компанию cenix
+Стек: Vue 3, TypeScript, Vuetify, Pinia. Данные хранятся в LocalStorage. <br>
+Доступно по ссылке: https://lucky-yeot-ffb4e6.netlify.app <br>
 ## Project setup
 ```
 npm install
