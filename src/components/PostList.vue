@@ -5,6 +5,8 @@
         v-for="post in filteredPosts"
         :key="post.id"
         :post="post"
+        :class="{ 'selected-post': selectedPostId === post.id }"
+        @click="selectPost(post.id)"
         @save="savePost(post.id, $event)"
         @delete="deletePost(post.id)"
       />
@@ -16,7 +18,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, computed } from 'vue';
+import { defineComponent, onMounted, computed, ref } from 'vue';
 import { usePostStore } from '@/stores/postsStore';
 import PostItem from '@/components/PostItem.vue';
 
@@ -26,9 +28,14 @@ export default defineComponent({
   },
   setup() {
     const postStore = usePostStore();
+    const selectedPostId = ref<string | null>(null); 
 
     const loadPosts = () => {
       postStore.loadPosts();
+    };
+
+    const selectPost = (id: string) => {
+      selectedPostId.value = id;
     };
 
     const savePost = (id: string, updatedName: string) => {
@@ -41,10 +48,12 @@ export default defineComponent({
 
     onMounted(loadPosts);
 
-    const filteredPosts = computed(() => postStore.filteredPosts); 
+    const filteredPosts = computed(() => postStore.filteredPosts);
 
     return {
       filteredPosts,
+      selectedPostId,
+      selectPost,
       savePost,
       deletePost,
     };
@@ -52,13 +61,18 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
-  .list-container {
-    height: 100%;
-  }
 
-  .list {
-    display: flex;
-    flex-direction: column-reverse;
-  }
+<style scoped>
+.list-container {
+  height: 100%;
+}
+
+.list {
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.selected-post {
+  background-color: #f5f0ff;
+}
 </style>

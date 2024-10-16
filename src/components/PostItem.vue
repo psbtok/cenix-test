@@ -68,14 +68,21 @@ export default defineComponent({
   .item {
     margin-bottom: 16px;
     display: flex;
+    padding: 8px;
   }
 
   .not-editing {
     pointer-events: none;
+    border-bottom: 2px solid #f5f0ff;
+  }
+
+  .input {
+    position: relative; 
+    bottom: 2px;
   }
 
   .editing {
-    background-color: rgb(247, 246, 246);
+    border-bottom: 2px solid #a28df1;
   }
 
   .button-container {
