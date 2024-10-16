@@ -1,8 +1,8 @@
 <template>
-  <v-list class="list">
-    <v-list v-if="posts.length" color="primary">
+  <v-list class="list-container">
+    <v-list class="list" v-if="filteredPosts.length" color="primary">
       <PostItem
-        v-for="post in posts"
+        v-for="post in filteredPosts"
         :key="post.id"
         :post="post"
         @save="savePost(post.id, $event)"
@@ -41,10 +41,10 @@ export default defineComponent({
 
     onMounted(loadPosts);
 
-    const posts = computed(() => postStore.posts);
+    const filteredPosts = computed(() => postStore.filteredPosts); 
 
     return {
-      posts,
+      filteredPosts,
       savePost,
       deletePost,
     };
@@ -53,7 +53,12 @@ export default defineComponent({
 </script>
 
 <style scoped>
-  .list {
+  .list-container {
     height: 100%;
+  }
+
+  .list {
+    display: flex;
+    flex-direction: column-reverse;
   }
 </style>

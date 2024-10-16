@@ -4,27 +4,41 @@ import { Post } from '@/models/post';
 export const usePostStore = defineStore('post', {
   state: () => ({
     posts: [] as Post[],
-    filteredPosts: []  as Post[]
+    filteredPosts: [] as Post[],
   }),
   actions: {
-    loadPosts() {
+    
+    async loadPosts() {
       const storedPosts = localStorage.getItem('posts');
-      console.log(storedPosts);
-      if (storedPosts) {
+      
+      if (storedPosts && JSON.parse(storedPosts).length) {
         this.posts = JSON.parse(storedPosts);
+        this.filteredPosts = this.posts;
+      } else {
+        try {
+          const response = await fetch('/posts.json');
+          const data: {'posts': Post[]} = await response.json();
+          this.posts = data.posts;
+          this.filteredPosts = data.posts;
+          this.savePosts();
+        } catch (error) {
+          console.error('Error loading posts:', error);
+        }
       }
     },
     searchPosts(query: string) {
       if (!query) {
         this.filteredPosts = this.posts;
       } else {
-        this.filteredPosts = this.posts.filter(post => 
-          post.name.toLowerCase().includes(query.toLowerCase())
+        this.filteredPosts = this.posts.filter(post =>
+          post.name.toLowerCase().includes(query.toLowerCase()) ||
+          post.id.toLowerCase().includes(query.toLowerCase())
         );
       }
     },
     savePosts() {
       localStorage.setItem('posts', JSON.stringify(this.posts));
+      this.filteredPosts = this.posts;
     },
     addPost(post: Post) {
       this.posts.push(post);
@@ -38,10 +52,6 @@ export const usePostStore = defineStore('post', {
       }
     },
     deletePost(id: string) {
-      for (const post of this.posts) {
-        console.log(post.id == id);
-      }
-
       this.posts = this.posts.filter(post => post.id !== id);
       this.savePosts();
     },

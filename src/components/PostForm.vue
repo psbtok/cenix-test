@@ -45,6 +45,7 @@
 
 <style scoped>
   .form {
+    margin-top: 12px;
     display: flex;
     align-items: center;
   }
